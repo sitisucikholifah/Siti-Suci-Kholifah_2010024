@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAS WEB PROGRAMMING 1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="tiket-section">
+        <form class="form-pemesanan">
+
+            <span class="label-form">Nama Pemesan</span>
+            <input type="text" name="penumpang" id="penumpang" class="input-form">
+
+            <span class="label-form">Jumlah Tiket</span>
+            <input type="text" name="penumpang" id="tiket" class="input-form">
+
+            <div class="destination">
+                <div class="section-one">
+                    <span class="label-form">Kelas : </span>
+                
+                    <select name="kelas">
+                        <option value="Ekonomi">Ekonomi</option>
+                        <option value="Bisnis">Bisnis</option>
+                        <option value="Eksekutif">Eksekutif</option>
+                    </select>
+                </div>
+
+                <div class="section-two">
+                    <span class="label-form">Tujuan : </span>
+                
+                    <select name="tujuan">
+                        <option value="Bali">Bali</option>
+                        <option value="Jakarta">Jakarta</option>
+                        <option value="Padang">Padang</option>
+                    </select>
+                </div>
+            </div>
+
+            <span class="label-form">Bagasi : </span>
+
+            <label for="bagasi1" class="label-bagasi">
+                <input type="radio" name="bagasi" id="bagasi1" value="5kg" checked>
+                <span class="radio-label">5Kg</span>
+            </label>
+
+            <label for="bagasi2" class="label-bagasi">
+                <input type="radio" name="bagasi" id="bagasi2" value="10kg">
+                <span class="radio-label">10Kg</span>
+            </label>
+
+            <label for="bagasi3" class="label-bagasi">
+                <input type="radio" name="bagasi" id="bagasi3" value="15kg">
+                <span class="radio-label">15Kg</span>
+            </label>
+
+            <div class="asuransi">
+                <span class="label-form">Asuransi : </span>
+
+                <div class="option-asuransi">
+
+                    <label for="asuransi1" class="label-asuransi">
+                        <input type="checkbox" name="asuransi" id="asuransi1" value="Asuransi Kejiwaan">
+                        <span class="radio-label">Asuransi Kejiwaan</span>
+                    </label>
+        
+                    <label for="asuransi2" class="label-asuransi">
+                        <input type="checkbox" name="asuransi" id="asuransi2" value="Asuransi Kecelakaan">
+                        <span class="radio-label">Asuransi Kecelakaan</span>
+                    </label>
+        
+                    <label for="asuransi3" class="label-asuransi">
+                        <input type="checkbox" name="asuransi" id="asuransi3" value="Asuransi Keterlambatan">
+                        <span class="radio-label">Asuransi Keterlambatan</span>
+                    </label>
+                </div>
+            </div>
+            <div class="button-action">
+                <input type="submit" value="Simpan">
+                <input type="reset" value="Batal">
+            </div>
+        </form>
+    </div>
+
+    <script>
+
+
+        function prosesTiket(penumpang , tiket , kelas , tujuan , bagasi , asuransi){
+
+            var costBagasi = bagasi === '5kg' ? 100000 : bagasi === '10kg' ? 150000 : 200000
+            var hargaTiket = kelas === "Ekonomi" ? 1000000 : kelas === "Bisnis" ? 2000000 : 3000000
+            var fasilitas = kelas === "Ekonomi" ? "Air Mineral" : kelas === "Bisnis" ? "Snack" : "Makan"
+            var asuransiTotal = asuransi.length * 50000
+
+            var listAsuransi = ''
+
+            for(var i = 0; i < asuransi.length; i++){
+                if(i == asuransi.length - 1) listAsuransi += `${asuransi[i].value}`
+                else listAsuransi += `${asuransi[i].value}, `
+            }
+
+            var totalHarga = ((hargaTiket * tiket) - (tiket > 3 ? ((hargaTiket * 3) - (3 * 100)) : 0)) + costBagasi + asuransiTotal
+
+            var data = [penumpang,tiket,`${kelas} - ${fasilitas}`,tujuan,`${bagasi} (${costBagasi})`,`${listAsuransi} (${asuransiTotal})`,`Rp.${totalHarga}`]
+            var labelForm = ['Nama Pemesan','Jumlah','Kelas','Tujuan','Bagasi','Asuransi','Total Harga']
+            
+
+            var innerContainer = `
+                <div class="form-result">
+                    ${
+                        data.map((dataTiket,num) =>{
+                            return `
+                                <span class="label-form">${labelForm[num]}</span>
+                                <input type="text" name="result" class="result-form" value="${dataTiket}">
+                            `
+                        }).join(' ')
+                    }
+                </div>
+            `
+
+            return document.querySelector('.tiket-section').innerHTML = innerContainer
+        }
+
+
+        var submitBtn = document.querySelector('input[type="submit"]')
+
+
+        submitBtn.addEventListener('click',(e)=>{
+
+            let penumpang = document.getElementById('penumpang').value , 
+            totalTiket = document.getElementById('tiket').value , 
+            kelas = document.querySelector('select[name="kelas"]'),
+            selectedClass = kelas.options[kelas.selectedIndex].text,
+            tujuan = document.querySelector('select[name="tujuan"]'),
+            selectedTujuan = tujuan.options[tujuan.selectedIndex].text,
+            bagasi = document.querySelector('input[name="bagasi"]:checked').value,
+            asuransi = document.querySelectorAll('input[name="asuransi"]:checked')
+
+            prosesTiket(penumpang,totalTiket,selectedClass,selectedTujuan,bagasi,asuransi)
+        })
+
+
+        
+    </script>
+</body>
+</html>
